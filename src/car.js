@@ -93,16 +93,16 @@ export class Car {
     const under = new THREE.PointLight(0x00f0ff, 3, 22); under.position.y = 0.4; g.add(under);
     this.under = under;
 
-    // -- nitro: white-hot core + blue sheath per thruster, + heat glow --
-    const coreMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false });
-    const sheathMat = new THREE.MeshBasicMaterial({ color: 0x2fa8ff, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false });
+    // -- nitro: asphalt-style fire — yellow-white core, orange sheath --
+    const coreMat = new THREE.MeshBasicMaterial({ color: 0xfff0a8, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
+    const sheathMat = new THREE.MeshBasicMaterial({ color: 0xff6a12, transparent: true, opacity: 0.45, blending: THREE.AdditiveBlending, depthWrite: false });
     this._flames = [-0.72, 0.72].map((x) => {
       const core = new THREE.Mesh(new THREE.ConeGeometry(0.13, 1.1, 8), coreMat);
       const sheath = new THREE.Mesh(new THREE.ConeGeometry(0.26, 2.0, 8), sheathMat);
       for (const f of [core, sheath]) { f.rotation.x = Math.PI / 2; f.position.set(x, 0.52, -2.75); f.visible = false; g.add(f); }
       return { core, sheath };
     });
-    this.heat = new THREE.PointLight(0x55c8ff, 0, 16); this.heat.position.set(0, 0.6, -3); g.add(this.heat);
+    this.heat = new THREE.PointLight(0xff8a30, 0, 12); this.heat.position.set(0, 0.6, -3); g.add(this.heat);
 
     this.mesh = g;
     this.mesh.rotation.order = 'YXZ';                  // heading, then pitch/roll juice
@@ -115,7 +115,7 @@ export class Car {
     this.trailLife = new Float32Array(TRAIL);
     this.trailGeo.setAttribute('position', new THREE.BufferAttribute(this.trailPos, 3));
     this.trail = new THREE.Points(this.trailGeo, new THREE.PointsMaterial({
-      color: 0x8fe6ff, size: 2.6, transparent: true, opacity: 0.85,
+      color: 0xffa236, size: 2.2, transparent: true, opacity: 0.7,
       blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true,
     }));
     this.trail.frustumCulled = false;
@@ -177,7 +177,7 @@ export class Car {
         sheath.scale.set(j * 0.9, 0.8 + Math.random() * 1.3, j * 0.9);
       }
     }
-    this.heat.intensity = boost ? 5 + Math.random() * 3 : 0;
+    this.heat.intensity = boost ? 1.4 + Math.random() * 0.8 : 0;   // low warm flicker, not a floodlight
 
     if (boost) {
       this._trailT += dt;

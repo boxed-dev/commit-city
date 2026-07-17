@@ -11,19 +11,21 @@ class Sound {
     this.master = ctx.createGain(); this.master.gain.value = 0.6;
     this.master.connect(ctx.destination);
 
-    // -- EV drivetrain: sine whine + detuned saw body + sub --
-    this.whine = ctx.createOscillator(); this.whine.type = 'sine';
+    // -- drivetrain: low rounded tone + sub rumble, heavily filtered (no whine) --
     this.body = ctx.createOscillator(); this.body.type = 'sawtooth';
+    this.body2 = ctx.createOscillator(); this.body2.type = 'sawtooth'; // slight detune = thickness
     this.sub = ctx.createOscillator(); this.sub.type = 'sine';
     this.engineGain = ctx.createGain(); this.engineGain.gain.value = 0;
-    this.engineFilter = ctx.createBiquadFilter(); this.engineFilter.type = 'lowpass'; this.engineFilter.frequency.value = 600;
-    const bodyGain = ctx.createGain(); bodyGain.gain.value = 0.25;
-    const subGain = ctx.createGain(); subGain.gain.value = 0.5;
-    this.whine.connect(this.engineFilter);
+    this.engineFilter = ctx.createBiquadFilter(); this.engineFilter.type = 'lowpass';
+    this.engineFilter.frequency.value = 320; this.engineFilter.Q.value = 0.4;
+    const bodyGain = ctx.createGain(); bodyGain.gain.value = 0.18;
+    const body2Gain = ctx.createGain(); body2Gain.gain.value = 0.14;
+    const subGain = ctx.createGain(); subGain.gain.value = 0.85;
     this.body.connect(bodyGain).connect(this.engineFilter);
+    this.body2.connect(body2Gain).connect(this.engineFilter);
     this.sub.connect(subGain).connect(this.engineFilter);
     this.engineFilter.connect(this.engineGain).connect(this.master);
-    this.whine.start(); this.body.start(); this.sub.start();
+    this.body.start(); this.body2.start(); this.sub.start();
 
     // -- road / wind: looped white noise through a swept lowpass --
     const len = ctx.sampleRate;
@@ -41,16 +43,16 @@ class Sound {
   drive(speed, throttle, boost) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime, v = Math.abs(speed);
-    const f = 55 + v * 3.4;                                     // motor pitch rises with speed
-    this.whine.frequency.setTargetAtTime(f * 4.0, t, 0.05);     // characteristic EV whine octave
-    this.body.frequency.setTargetAtTime(f, t, 0.05);
-    this.sub.frequency.setTargetAtTime(f * 0.5, t, 0.05);
-    const load = 0.028 + throttle * 0.05 + (boost ? 0.05 : 0);
-    this.engineGain.gain.setTargetAtTime(v > 0.5 ? load : 0.008, t, 0.08);
-    this.engineFilter.frequency.setTargetAtTime(500 + v * 55 + (boost ? 1500 : 0), t, 0.1);
+    const f = 42 + v * 1.6;                                     // low, slow pitch climb
+    this.body.frequency.setTargetAtTime(f, t, 0.08);
+    this.body2.frequency.setTargetAtTime(f * 1.011, t, 0.08);   // beat-frequency thickness
+    this.sub.frequency.setTargetAtTime(f * 0.5, t, 0.08);
+    const load = 0.02 + throttle * 0.035 + (boost ? 0.035 : 0);
+    this.engineGain.gain.setTargetAtTime(v > 0.5 ? load : 0.006, t, 0.1);
+    this.engineFilter.frequency.setTargetAtTime(220 + v * 14 + (boost ? 500 : 0), t, 0.12);
     const windK = Math.min(1, v / 66);
-    this.windGain.gain.setTargetAtTime(windK * windK * 0.16 + (boost ? 0.05 : 0), t, 0.1);
-    this.windFilter.frequency.setTargetAtTime(250 + windK * 2600, t, 0.15);
+    this.windGain.gain.setTargetAtTime(windK * windK * 0.1 + (boost ? 0.05 : 0), t, 0.12);
+    this.windFilter.frequency.setTargetAtTime(220 + windK * 1500, t, 0.18);
   }
 
   blip(n) { // pentatonic pluck, climbs with combo
