@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COMMIT CITY // drive your GitHub year</title>
+<link rel="stylesheet" href="css/style.css">
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+  <div id="ui">
+    <div class="card">
+      <h1>COMMIT CITY</h1>
+      <p class="sub">jack in a github handle // <b>drive the endless grid of your year</b></p>
+      <input id="user" placeholder="torvalds" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button id="go">INITIALIZE GRID</button>
+      <p class="err" id="err"></p>
+    </div>
+  </div>
+
+  <div id="hud" class="frame">
+    <span class="tag">OPERATOR</span>
+    <div><b id="hUser">—</b> <span class="k">· <span id="hYear"></span></span></div>
+    <div class="big" id="hTotal">0</div>
+    <div><span class="k">commits · peak</span> <b id="hBusy">—</b></div>
+  </div>
+
+  <div id="sector" class="frame"><span class="tag">NOW PASSING ▸</span><b id="hSector">—</b></div>
+
+  <div id="tour" class="frame">
+    <span class="tag">CITY TOUR</span>
+    <div class="row"><span id="compass">▲</span> <b id="tourN">0/5</b> <span class="k" id="tourDist">—</span></div>
+  </div>
+
+  <div id="game" class="frame">
+    <span class="tag">ENERGY</span>
+    <div class="big"><span id="orbN">0</span> <span id="comboN"></span></div>
+    <div class="k">best <b id="bestN">0</b></div>
+  </div>
+
+  <div id="boostBar"><div id="boostFill"></div><span id="boostLbl">SHIFT ▸ NITRO</span></div>
+
+  <div id="visitCard">
+    <div id="vcA"></div>
+    <div id="vcB"></div>
+    <div id="vcC"></div>
+  </div>
+
+  <div id="speedo"><span class="num" id="spd">0</span><span class="lbl">KM/H</span></div>
+  <div id="help">
+    <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> drive</span>
+    <span><kbd>Space</kbd> brake</span>
+    <span><kbd>Shift</kbd> nitro</span>
+    <span><kbd>C</kbd> cam</span>
+    <span><kbd>L</kbd> day/night</span>
+    <span><kbd>R</kbd> reset</span>
+  </div>
+
+  <!-- cinematic overlay -->
+  <div id="barTop" class="bar"></div>
+  <div id="barBot" class="bar"></div>
+  <div id="cine">
+    <div id="cineUser"></div>
+    <div id="cineCount">0</div>
+    <div id="cineSub"></div>
+  </div>
+  <div id="skipHint">press any key to skip</div>
+
+  <div id="scan"></div>
+  <div id="vig"></div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
