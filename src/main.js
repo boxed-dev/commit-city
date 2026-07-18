@@ -104,7 +104,7 @@ function applyEnvironment(t) {
   bloom.strength = 0.1 + night * 0.34 + warmK * 0.16;
   bloom.threshold = 0.95 - night * 0.09;
 
-  document.body.classList.toggle('day', dayK > 0.55);
+  document.body.classList.toggle('day', ready && dayK > 0.55);
   city?.applyEnv(sunDir, dayK, warmK, t);
   car.setDay(night);
   setPhaseName(clockState.time);
