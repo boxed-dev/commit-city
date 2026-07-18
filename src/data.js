@@ -4,7 +4,12 @@
 export async function fetchContributions(user) {
   const year = new Date().getFullYear();
   const url = `https://github-contributions-api.jogruber.de/v4/${encodeURIComponent(user)}?y=${year}`;
-  const res = await fetch(url);
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 10_000);   // a hung fetch must not hang the launch
+  let res;
+  try { res = await fetch(url, { signal: ctrl.signal }); }
+  catch (e) { throw new Error(e.name === 'AbortError' ? 'github timed out' : 'network error'); }
+  finally { clearTimeout(timer); }
   if (!res.ok) throw new Error(res.status === 404 ? 'user not found' : 'github data unavailable');
   const json = await res.json();
   if (!json.contributions?.length) throw new Error('no contribution data');

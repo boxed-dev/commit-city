@@ -38,7 +38,7 @@ export class Game {
         new THREE.CylinderGeometry(1.6, 3.2, h, 4, 1),
         new THREE.MeshStandardMaterial({ color: 0x2a1d06, emissive: 0xffb327, emissiveIntensity: 1.2, roughness: 0.35, metalness: 0.8 })
       );
-      obelisk.position.y = h / 2; obelisk.rotation.y = Math.PI / 4; g.add(obelisk);
+      obelisk.position.y = h / 2; obelisk.rotation.y = Math.PI / 4; obelisk.castShadow = true; g.add(obelisk);
       const beam = new THREE.Mesh(
         new THREE.CylinderGeometry(0.9, 0.9, 300, 8, 1, true),
         new THREE.MeshBasicMaterial({ color: 0xffcf5e, transparent: true, opacity: 0.16, side: THREE.DoubleSide, depthWrite: false })

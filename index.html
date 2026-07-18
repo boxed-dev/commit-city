@@ -52,13 +52,28 @@
   </div>
 
   <div id="speedo"><span class="num" id="spd">0</span><span class="lbl">KM/H</span></div>
+  <div id="clock">13:00 DAY</div>
   <div id="help">
     <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> drive</span>
-    <span><kbd>Space</kbd> brake</span>
+    <span><kbd>Space</kbd> handbrake</span>
     <span><kbd>Shift</kbd> nitro</span>
     <span><kbd>C</kbd> cam</span>
-    <span><kbd>L</kbd> day/night</span>
+    <span><kbd>L</kbd> sun cycle</span>
     <span><kbd>R</kbd> reset</span>
+  </div>
+
+  <div id="touch">
+    <div class="tz left">
+      <button data-k="KeyA" aria-label="steer left">◀</button>
+      <button data-k="KeyD" aria-label="steer right">▶</button>
+    </div>
+    <div class="tz right">
+      <button data-k="ShiftLeft" class="nitro" aria-label="nitro">NITRO</button>
+      <div class="row">
+        <button data-k="Space" aria-label="handbrake">BRAKE</button>
+        <button data-k="KeyW" class="gas" aria-label="accelerate">GAS</button>
+      </div>
+    </div>
   </div>
 
   <!-- cinematic overlay -->

@@ -8,7 +8,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); touch-action: none; overscroll-behavior: none; }
 body { font-family: ui-monospace, 'SF Mono', Menlo, monospace; color: #cfefff; }
 
 /* light mode: variable overrides re-skin the whole HUD */
@@ -217,3 +217,44 @@ kbd {
 #vcA { font-size: 30px; font-weight: 800; letter-spacing: 3px; color: #ffe9b0; text-shadow: 0 0 26px rgba(255,179,39,.5); }
 #vcB { font-size: 15px; letter-spacing: 2px; color: var(--cyan); margin-top: 4px; }
 #vcC { font-size: 11px; letter-spacing: 4px; color: #ffb327; margin-top: 8px; }
+
+/* == world clock chip ===================================================== */
+#clock {
+  position: fixed; left: 50%; top: 14px; transform: translateX(-50%); z-index: 20;
+  font-size: 11px; letter-spacing: 3px; color: var(--cyan);
+  background: var(--panel); border: 1px solid var(--line); padding: 5px 14px;
+  clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+  pointer-events: none; opacity: .85;
+}
+body.day #clock { color: #0a3a4d; }
+
+/* == touch controls (coarse pointers only) ================================ */
+#touch { display: none; }
+@media (pointer: coarse) {
+  #touch {
+    display: flex; position: fixed; inset: auto 0 0 0; z-index: 24;
+    justify-content: space-between; align-items: flex-end;
+    padding: 0 14px calc(14px + env(safe-area-inset-bottom));
+    pointer-events: none; touch-action: none;
+  }
+  #help { display: none; }
+  #touch .tz { display: flex; gap: 12px; pointer-events: auto; }
+  #touch .tz.right { flex-direction: column; align-items: flex-end; gap: 10px; }
+  #touch .tz.right .row { display: flex; gap: 12px; }
+  #touch button {
+    width: 74px; height: 74px; margin: 0; padding: 0;
+    font-size: 15px; letter-spacing: 1px; font-weight: 800;
+    color: var(--cyan); background: rgba(5, 14, 24, .55);
+    border: 1px solid var(--line); border-radius: 50%;
+    clip-path: none; backdrop-filter: blur(6px);
+    -webkit-tap-highlight-color: transparent; user-select: none; touch-action: none;
+  }
+  #touch button.held { background: rgba(0, 240, 255, .3); color: #051015; }
+  #touch button.gas { width: 88px; height: 88px; color: #7dff9a; border-color: rgba(125, 255, 154, .4); }
+  #touch button.gas.held { background: rgba(125, 255, 154, .3); }
+  #touch button.nitro { width: 64px; height: 40px; border-radius: 20px; font-size: 11px; color: var(--yel); border-color: rgba(249, 240, 2, .4); }
+  #touch button.nitro.held { background: rgba(249, 240, 2, .3); }
+  #speedo { bottom: 130px; }
+  #boostBar { bottom: 120px; }
+  #sector { bottom: 120px; }
+}

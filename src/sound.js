@@ -37,6 +37,24 @@ class Sound {
     this.windGain = ctx.createGain(); this.windGain.gain.value = 0;
     this.noise.connect(this.windFilter).connect(this.windGain).connect(this.master);
     this.noise.start();
+
+    // -- tyre screech: bandpassed noise, gain follows lateral slip --
+    this.skid = ctx.createBufferSource(); this.skid.buffer = buf; this.skid.loop = true;
+    this.skid.playbackRate.value = 0.85;
+    this.skidFilter = ctx.createBiquadFilter(); this.skidFilter.type = 'bandpass';
+    this.skidFilter.frequency.value = 1050; this.skidFilter.Q.value = 3.5;
+    this.skidGain = ctx.createGain(); this.skidGain.gain.value = 0;
+    this.skid.connect(this.skidFilter).connect(this.skidGain).connect(this.master);
+    this.skid.start();
+  }
+
+  // k = slip amount 0..1, speed m/s
+  drift(k, speed) {
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    const on = k > 0.25 && speed > 8;
+    this.skidGain.gain.setTargetAtTime(on ? Math.min(0.11, k * 0.13) : 0, t, 0.09);
+    this.skidFilter.frequency.setTargetAtTime(850 + k * 700, t, 0.1);
   }
 
   // called every frame while driving: speed m/s, throttle 0/1, boost bool
